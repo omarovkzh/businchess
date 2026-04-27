@@ -9,6 +9,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { useStockfish } from "@/hooks/useStockfish";
 import { Moon, Sun, RotateCcw, Undo2, FlipVertical2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { AICoachPanel, type Analysis } from "@/components/AICoachPanel";
+import { supabase } from "@/integrations/supabase/client";
 
 type Side = "w" | "b";
 
@@ -31,6 +33,10 @@ const Index = () => {
   const [difficulty, setDifficulty] = useState(2); // index into SKILL_LEVELS
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
   const [thinking, setThinking] = useState(false);
+  const [coachOpen, setCoachOpen] = useState(false);
+  const [coachLoading, setCoachLoading] = useState(false);
+  const [coachError, setCoachError] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
 
   const stockfish = useStockfish();
   const gameRef = useRef(game);
@@ -114,6 +120,31 @@ const Index = () => {
     setOrientation(side);
     setThinking(false);
     setPendingPromotion(null);
+    setCoachOpen(false);
+    setAnalysis(null);
+    setCoachError(null);
+  };
+
+  const handleAnalyze = async () => {
+    setCoachOpen(true);
+    setCoachLoading(true);
+    setCoachError(null);
+    setAnalysis(null);
+    try {
+      const pgn = game.pgn();
+      const { data, error } = await supabase.functions.invoke("analyze-game", {
+        body: { pgn, result: status.text, playerColor: playerSide },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setAnalysis(data as Analysis);
+    } catch (e: any) {
+      const msg = e?.message ?? "Failed to analyze game";
+      setCoachError(msg);
+      toast.error(msg);
+    } finally {
+      setCoachLoading(false);
+    }
   };
 
   const handleUndo = () => {
@@ -215,6 +246,16 @@ const Index = () => {
                   Stockfish CDN unavailable — using offline fallback engine.
                 </p>
               )}
+              {status.kind === "end" && history.length > 0 && (
+                <Button
+                  onClick={handleAnalyze}
+                  disabled={coachLoading}
+                  className="w-full mt-4 bg-accent text-accent-foreground hover:bg-accent/90 font-medium"
+                >
+                  <Sparkles className="h-4 w-4 mr-1.5" />
+                  {coachLoading ? "Analyzing…" : "Analyze with AI Coach"}
+                </Button>
+              )}
             </div>
 
             {/* Controls */}
@@ -283,6 +324,15 @@ const Index = () => {
           }
         }}
         onCancel={() => setPendingPromotion(null)}
+      />
+
+      <AICoachPanel
+        open={coachOpen}
+        loading={coachLoading}
+        error={coachError}
+        analysis={analysis}
+        onClose={() => setCoachOpen(false)}
+        onRetry={handleAnalyze}
       />
     </div>
   );
