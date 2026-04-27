@@ -101,7 +101,7 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
                 key={square}
                 onClick={() => handleClick(square)}
                 className={cn(
-                  "relative flex items-center justify-center transition-colors duration-150 select-none",
+                  "relative w-full h-full min-w-0 min-h-0 overflow-hidden transition-colors duration-150 select-none",
                   isLight ? "bg-board-light" : "bg-board-dark",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset",
                 )}
