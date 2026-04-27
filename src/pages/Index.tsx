@@ -325,6 +325,15 @@ const Index = () => {
         }}
         onCancel={() => setPendingPromotion(null)}
       />
+
+      <AICoachPanel
+        open={coachOpen}
+        loading={coachLoading}
+        error={coachError}
+        analysis={analysis}
+        onClose={() => setCoachOpen(false)}
+        onRetry={handleAnalyze}
+      />
     </div>
   );
 };
