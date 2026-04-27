@@ -9,6 +9,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { useStockfish } from "@/hooks/useStockfish";
 import { Moon, Sun, RotateCcw, Undo2, FlipVertical2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { AICoachPanel, type Analysis } from "@/components/AICoachPanel";
+import { supabase } from "@/integrations/supabase/client";
 
 type Side = "w" | "b";
 
