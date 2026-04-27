@@ -33,6 +33,10 @@ const Index = () => {
   const [difficulty, setDifficulty] = useState(2); // index into SKILL_LEVELS
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
   const [thinking, setThinking] = useState(false);
+  const [coachOpen, setCoachOpen] = useState(false);
+  const [coachLoading, setCoachLoading] = useState(false);
+  const [coachError, setCoachError] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
 
   const stockfish = useStockfish();
   const gameRef = useRef(game);
