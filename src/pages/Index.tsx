@@ -246,6 +246,16 @@ const Index = () => {
                   Stockfish CDN unavailable — using offline fallback engine.
                 </p>
               )}
+              {status.kind === "end" && history.length > 0 && (
+                <Button
+                  onClick={handleAnalyze}
+                  disabled={coachLoading}
+                  className="w-full mt-4 bg-accent text-accent-foreground hover:bg-accent/90 font-medium"
+                >
+                  <Sparkles className="h-4 w-4 mr-1.5" />
+                  {coachLoading ? "Analyzing…" : "Analyze with AI Coach"}
+                </Button>
+              )}
             </div>
 
             {/* Controls */}
