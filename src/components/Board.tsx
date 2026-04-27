@@ -101,7 +101,7 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
                 key={square}
                 onClick={() => handleClick(square)}
                 className={cn(
-                  "relative flex items-center justify-center transition-colors duration-150 select-none",
+                  "relative w-full h-full min-w-0 min-h-0 overflow-hidden transition-colors duration-150 select-none",
                   isLight ? "bg-board-light" : "bg-board-dark",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset",
                 )}
@@ -120,7 +120,7 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
                 {piece && (
                   <span
                     className={cn(
-                      "relative z-10 piece-shadow leading-none",
+                      "absolute inset-0 z-10 flex items-center justify-center piece-shadow leading-none pointer-events-none",
                       "text-[clamp(1.6rem,7.5vw,3.6rem)]",
                       piece.color === "w" ? "text-white" : "text-neutral-900",
                     )}
