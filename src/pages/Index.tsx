@@ -120,6 +120,31 @@ const Index = () => {
     setOrientation(side);
     setThinking(false);
     setPendingPromotion(null);
+    setCoachOpen(false);
+    setAnalysis(null);
+    setCoachError(null);
+  };
+
+  const handleAnalyze = async () => {
+    setCoachOpen(true);
+    setCoachLoading(true);
+    setCoachError(null);
+    setAnalysis(null);
+    try {
+      const pgn = game.pgn();
+      const { data, error } = await supabase.functions.invoke("analyze-game", {
+        body: { pgn, result: status.text, playerColor: playerSide },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      setAnalysis(data as Analysis);
+    } catch (e: any) {
+      const msg = e?.message ?? "Failed to analyze game";
+      setCoachError(msg);
+      toast.error(msg);
+    } finally {
+      setCoachLoading(false);
+    }
   };
 
   const handleUndo = () => {
