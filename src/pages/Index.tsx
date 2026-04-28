@@ -23,7 +23,17 @@ const DIFFICULTY_LEVELS = [
   { label: "Hard",   movetime: 1200 },
 ];
 
-const INITIAL_TIME_MS = 5 * 60 * 1000;
+type TimeCategory = "Bullet" | "Blitz" | "Rapid" | "Classical";
+const TIME_CONTROLS: { minutes: number; category: TimeCategory }[] = [
+  { minutes: 1,  category: "Bullet" },
+  { minutes: 2,  category: "Bullet" },
+  { minutes: 3,  category: "Blitz" },
+  { minutes: 5,  category: "Blitz" },
+  { minutes: 10, category: "Rapid" },
+  { minutes: 15, category: "Rapid" },
+  { minutes: 30, category: "Classical" },
+];
+const DEFAULT_TIME_INDEX = 3; // 5 min Blitz
 
 const Index = () => {
   const { theme, toggle } = useTheme();
@@ -42,9 +52,12 @@ const Index = () => {
   const [coachError, setCoachError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
 
-  // Clock
-  const [whiteMs, setWhiteMs] = useState(INITIAL_TIME_MS);
-  const [blackMs, setBlackMs] = useState(INITIAL_TIME_MS);
+  // Clock + time control
+  const [timeIndex, setTimeIndex] = useState(DEFAULT_TIME_INDEX);
+  const [pendingTimeIndex, setPendingTimeIndex] = useState(DEFAULT_TIME_INDEX);
+  const initialTimeMs = TIME_CONTROLS[timeIndex].minutes * 60 * 1000;
+  const [whiteMs, setWhiteMs] = useState(initialTimeMs);
+  const [blackMs, setBlackMs] = useState(initialTimeMs);
   const [timeoutSide, setTimeoutSide] = useState<Side | null>(null);
 
   // Sounds
@@ -203,13 +216,15 @@ const Index = () => {
     setPlayerSide(side);
     setOrientation(side);
     setDifficulty(pendingDifficulty);
+    setTimeIndex(pendingTimeIndex);
+    const ms = TIME_CONTROLS[pendingTimeIndex].minutes * 60 * 1000;
     setThinking(false);
     setPendingPromotion(null);
     setCoachOpen(false);
     setAnalysis(null);
     setCoachError(null);
-    setWhiteMs(INITIAL_TIME_MS);
-    setBlackMs(INITIAL_TIME_MS);
+    setWhiteMs(ms);
+    setBlackMs(ms);
     setTimeoutSide(null);
     setGameOverOpen(false);
     endHandledRef.current = false;
@@ -310,12 +325,20 @@ const Index = () => {
               maxWidth: "min(96vw, calc(100vh - 220px), 720px)",
             }}
           >
-            {/* Difficulty label */}
-            <div className="w-full flex items-center justify-center gap-2">
-              <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
-              <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
-                {DIFFICULTY_LEVELS[difficulty].label}
-              </span>
+            {/* Difficulty + time control labels */}
+            <div className="w-full flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
+                <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
+                  {DIFFICULTY_LEVELS[difficulty].label}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Time</span>
+                <span className="text-[11px] tracking-widest uppercase font-medium text-foreground px-2 py-0.5 rounded-md bg-secondary border border-border">
+                  {TIME_CONTROLS[timeIndex].minutes} min · {TIME_CONTROLS[timeIndex].category}
+                </span>
+              </div>
             </div>
 
             {/* Top player + clock */}
@@ -424,6 +447,31 @@ const Index = () => {
                 {gameInProgress
                   ? <p className="text-[11px] text-muted-foreground">Applies on next new game.</p>
                   : pendingDifficulty !== difficulty
+                    ? <p className="text-[11px] text-accent">Starts on next new game.</p>
+                    : null}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Time control</label>
+                <Select
+                  value={String(pendingTimeIndex)}
+                  onValueChange={(v) => setPendingTimeIndex(Number(v))}
+                  disabled={gameInProgress}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIME_CONTROLS.map((t, i) => (
+                      <SelectItem key={i} value={String(i)}>
+                        {t.minutes} min <span className="text-muted-foreground">· {t.category}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {gameInProgress
+                  ? <p className="text-[11px] text-muted-foreground">Applies on next new game.</p>
+                  : pendingTimeIndex !== timeIndex
                     ? <p className="text-[11px] text-accent">Starts on next new game.</p>
                     : null}
               </div>
