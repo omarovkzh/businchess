@@ -1,6 +1,6 @@
 import { Chess, type Square } from "chess.js";
 import { useMemo } from "react";
-import { PIECE_GLYPHS, pieceKey } from "@/lib/pieces";
+import { PieceIcon } from "@/components/PieceIcon";
 import { cn } from "@/lib/utils";
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
