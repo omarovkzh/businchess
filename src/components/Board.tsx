@@ -17,7 +17,8 @@ interface BoardProps {
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
 const RANKS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
 
-export function Board({ game, orientation, onMove, lastMove, disabled, onPromotionNeeded }: BoardProps) {
+export function Board({ game, orientation, onMove, lastMove, disabled, onPromotionNeeded, themeColors }: BoardProps) {
+  const colors = themeColors ?? BOARD_THEME_COLORS.classic;
   const [selected, setSelected] = useState<Square | null>(null);
 
   const files = orientation === "w" ? FILES : [...FILES].reverse();
