@@ -18,9 +18,9 @@ import { supabase } from "@/integrations/supabase/client";
 type Side = "w" | "b";
 
 const DIFFICULTY_LEVELS = [
-  { label: "Easy",   depth: 1 },
-  { label: "Medium", depth: 5 },
-  { label: "Hard",   depth: 15 },
+  { label: "Easy",   movetime: 500 },
+  { label: "Medium", movetime: 800 },
+  { label: "Hard",   movetime: 1200 },
 ];
 
 const INITIAL_TIME_MS = 5 * 60 * 1000;
@@ -139,7 +139,7 @@ const Index = () => {
     const fen = game.fen();
 
     const handle = setTimeout(() => {
-      stockfish.requestMove(fen, cfg.depth, (mv) => {
+      stockfish.requestMove(fen, cfg.movetime, (mv) => {
         if (!mv.from || !mv.to) {
           const legal = gameRef.current.moves({ verbose: true });
           if (legal.length) {
@@ -393,7 +393,7 @@ const Index = () => {
                   <SelectContent>
                     {DIFFICULTY_LEVELS.map((l, i) => (
                       <SelectItem key={l.label} value={String(i)}>
-                        {l.label} <span className="text-muted-foreground">· depth {l.depth}</span>
+                        {l.label} <span className="text-muted-foreground">· {l.movetime}ms</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
