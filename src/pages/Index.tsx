@@ -393,7 +393,7 @@ const Index = () => {
                   <SelectContent>
                     {DIFFICULTY_LEVELS.map((l, i) => (
                       <SelectItem key={l.label} value={String(i)}>
-                        {l.label} <span className="text-muted-foreground">· depth {l.depth}</span>
+                        {l.label} <span className="text-muted-foreground">· {l.movetime}ms</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
