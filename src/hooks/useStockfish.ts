@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // Loads Stockfish as a Web Worker from CDN. Falls back to a simple random-move engine
 // if the worker fails to load (offline / CSP), so the app stays playable.
 
 type BestMoveCallback = (move: { from: string; to: string; promotion?: string }) => void;
 
-const HARD_TIMEOUT_MS = 2000;
+const HARD_TIMEOUT_MS = 3000;
 
-const STOCKFISH_URL = "https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js";
+const STOCKFISH_URL = "https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js";
 
 export function useStockfish() {
   const workerRef = useRef<Worker | null>(null);
@@ -85,7 +85,7 @@ export function useStockfish() {
     };
   }, []);
 
-  const requestMove = (
+  const requestMove = useCallback((
     fen: string,
     movetime: number,
     cb: BestMoveCallback,
@@ -103,7 +103,7 @@ export function useStockfish() {
       return;
     }
 
-    const mt = Math.max(100, Math.min(5000, movetime));
+    const mt = 800;
     const w = workerRef.current;
     requestStartRef.current = Date.now();
     console.log(`[Stockfish] sending: go movetime ${mt}`);
@@ -111,7 +111,7 @@ export function useStockfish() {
     w.postMessage(`position fen ${fen}`);
     w.postMessage(`go movetime ${mt}`);
 
-    // Hard timeout: if no response in 2s, force a random legal move via empty callback
+    // Hard timeout: if no response in 3s, force a random legal move via empty callback
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = null;
       if (!callbackRef.current) return;
@@ -123,7 +123,7 @@ export function useStockfish() {
       callbackRef.current = null;
       cbNow({ from: "", to: "" });
     }, HARD_TIMEOUT_MS);
-  };
+  }, [usingFallback]);
 
-  return { ready, usingFallback, requestMove };
+  return useMemo(() => ({ ready, usingFallback, requestMove }), [ready, usingFallback, requestMove]);
 }
