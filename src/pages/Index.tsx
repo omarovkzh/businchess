@@ -325,12 +325,20 @@ const Index = () => {
               maxWidth: "min(96vw, calc(100vh - 220px), 720px)",
             }}
           >
-            {/* Difficulty label */}
-            <div className="w-full flex items-center justify-center gap-2">
-              <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
-              <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
-                {DIFFICULTY_LEVELS[difficulty].label}
-              </span>
+            {/* Difficulty + time control labels */}
+            <div className="w-full flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
+                <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
+                  {DIFFICULTY_LEVELS[difficulty].label}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Time</span>
+                <span className="text-[11px] tracking-widest uppercase font-medium text-foreground px-2 py-0.5 rounded-md bg-secondary border border-border">
+                  {TIME_CONTROLS[timeIndex].minutes} min · {TIME_CONTROLS[timeIndex].category}
+                </span>
+              </div>
             </div>
 
             {/* Top player + clock */}
