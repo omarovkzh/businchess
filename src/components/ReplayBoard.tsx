@@ -2,6 +2,7 @@ import { Chess, type Square } from "chess.js";
 import { useMemo } from "react";
 import { PieceIcon } from "@/components/PieceIcon";
 import { cn } from "@/lib/utils";
+import { type BoardThemeColors, BOARD_THEME_COLORS } from "@/lib/boardThemes";
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
 const RANKS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
@@ -11,9 +12,11 @@ interface ReplayBoardProps {
   orientation?: "w" | "b";
   lastMove?: { from: Square; to: Square } | null;
   highlight?: { from: Square; to: Square } | null;
+  themeColors?: BoardThemeColors;
 }
 
-export function ReplayBoard({ fen, orientation = "w", lastMove, highlight }: ReplayBoardProps) {
+export function ReplayBoard({ fen, orientation = "w", lastMove, highlight, themeColors }: ReplayBoardProps) {
+  const colors = themeColors ?? BOARD_THEME_COLORS.classic;
   const chess = useMemo(() => {
     const c = new Chess();
     try { c.load(fen); } catch { /* noop */ }
