@@ -139,7 +139,7 @@ const Index = () => {
     const fen = game.fen();
 
     const handle = setTimeout(() => {
-      stockfish.requestMove(fen, cfg.depth, (mv) => {
+      stockfish.requestMove(fen, cfg.movetime, (mv) => {
         if (!mv.from || !mv.to) {
           const legal = gameRef.current.moves({ verbose: true });
           if (legal.length) {
