@@ -202,12 +202,18 @@ const Index = () => {
         <div className="grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-10 items-start">
           {/* Board side */}
           <div className="flex flex-col items-center gap-5">
+            <div className="w-full max-w-[min(92vw,640px)] flex items-center justify-center gap-2">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
+              <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
+                {DIFFICULTY_LEVELS[difficulty].label}
+              </span>
+            </div>
             <PlayerBar
               label={playerSide === "w" ? "Stockfish" : "Stockfish"}
               side={playerSide === "w" ? "b" : "w"}
               active={game.turn() !== playerSide && !game.isGameOver()}
               thinking={thinking}
-              difficulty={SKILL_LEVELS[difficulty].label}
+              difficulty={DIFFICULTY_LEVELS[difficulty].label}
             />
 
             <Board
