@@ -526,6 +526,7 @@ const Index = () => {
         loading={coachLoading}
         error={coachError}
         analysis={analysis}
+        pgn={game.pgn()}
         onClose={() => setCoachOpen(false)}
         onRetry={handleAnalyze}
       />

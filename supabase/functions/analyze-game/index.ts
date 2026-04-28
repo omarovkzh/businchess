@@ -11,16 +11,21 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const systemPrompt = `You are a world-class chess coach. Analyze the game and identify exactly 3 of the player's most impactful mistakes (blunders, missed tactics, or strategic errors). The player played as ${playerColor === "w" ? "White" : "Black"}. Game result: ${result}.
+    const systemPrompt = `You are a chess coach who speaks the language of entrepreneurship and startups. Analyze the chess game and explain each key mistake using business and startup analogies. For example: "Move 15: You attacked without securing your position first — in startup terms, this is like scaling your marketing before achieving product-market fit." Be specific, insightful, and make the player think about both chess strategy AND business strategy simultaneously. Give 5-7 key moments with this dual analysis.
 
-Respond ONLY by calling the report_mistakes tool. For each mistake provide:
-- moveNumber (the full move number, e.g. 12)
-- moveNotation (the actual move played in SAN, e.g. "Ng5")
-- severity ("blunder" | "mistake" | "inaccuracy")
-- explanation (one to two sentences: what went wrong and why)
-- betterMove (the recommended alternative in SAN with a brief reason)
+The player played as ${playerColor === "w" ? "White" : "Black"}. Game result: ${result}.
 
-Also provide a 'summary' field: 2-3 sentences summarizing the player's overall performance.`;
+Respond ONLY by calling the report_moments tool. For each moment, use the player's full move number from the PGN (the integer N in "N. ..."). For each moment provide:
+- moveNumber: the full move number (integer)
+- ply: the half-move index in the game starting at 1 (so White's move 1 = ply 1, Black's move 1 = ply 2, White's move 2 = ply 3, etc.)
+- side: "w" or "b" — which side made this move
+- moveNotation: the actual move played in SAN (e.g. "Ng5")
+- severity: "blunder" | "mistake" | "inaccuracy" | "brilliant"
+- chessInsight: 1-2 sentences explaining the chess concept (what went wrong tactically/strategically, or why this was strong)
+- businessAnalogy: 1-2 sentences mapping the chess idea to a startup/business situation. Be vivid and specific (mention concepts like PMF, runway, burn rate, moat, hiring, fundraising, MVPs, customer acquisition, etc.)
+- betterMove: the recommended alternative in SAN (or "—" if the move was already best/brilliant)
+
+Also include 'summary': 2-3 sentences summarizing the player's overall approach with one closing business takeaway.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -38,35 +43,40 @@ Also provide a 'summary' field: 2-3 sentences summarizing the player's overall p
           {
             type: "function",
             function: {
-              name: "report_mistakes",
-              description: "Return the 3 key mistakes and a summary.",
+              name: "report_moments",
+              description: "Return 5-7 critical moments and a summary blending chess and business insight.",
               parameters: {
                 type: "object",
                 properties: {
                   summary: { type: "string" },
-                  mistakes: {
+                  moments: {
                     type: "array",
+                    minItems: 5,
+                    maxItems: 7,
                     items: {
                       type: "object",
                       properties: {
                         moveNumber: { type: "number" },
+                        ply: { type: "number" },
+                        side: { type: "string", enum: ["w", "b"] },
                         moveNotation: { type: "string" },
-                        severity: { type: "string", enum: ["blunder", "mistake", "inaccuracy"] },
-                        explanation: { type: "string" },
+                        severity: { type: "string", enum: ["blunder", "mistake", "inaccuracy", "brilliant"] },
+                        chessInsight: { type: "string" },
+                        businessAnalogy: { type: "string" },
                         betterMove: { type: "string" },
                       },
-                      required: ["moveNumber", "moveNotation", "severity", "explanation", "betterMove"],
+                      required: ["moveNumber", "ply", "side", "moveNotation", "severity", "chessInsight", "businessAnalogy", "betterMove"],
                       additionalProperties: false,
                     },
                   },
                 },
-                required: ["summary", "mistakes"],
+                required: ["summary", "moments"],
                 additionalProperties: false,
               },
             },
           },
         ],
-        tool_choice: { type: "function", function: { name: "report_mistakes" } },
+        tool_choice: { type: "function", function: { name: "report_moments" } },
       }),
     });
 
