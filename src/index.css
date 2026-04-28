@@ -35,10 +35,10 @@
 
     --radius: 0.75rem;
 
-    /* Board — warm wood */
-    --board-light: 36 38% 86%;
-    --board-dark: 26 32% 38%;
-    --board-frame: 25 35% 18%;
+    /* Board — defaults to Classic (Chess.com green). Theme classes below override. */
+    --board-light: 60 56% 91%;   /* #eeeed2 */
+    --board-dark:  82 27% 47%;   /* #769656 */
+    --board-frame: 80 20% 16%;
     --square-selected: 48 90% 60%;
     --square-move: 142 50% 48%;
     --square-capture: 0 75% 58%;
@@ -79,9 +79,9 @@
     --input: 220 15% 18%;
     --ring: 28 75% 58%;
 
-    --board-light: 35 18% 72%;
-    --board-dark: 25 22% 28%;
-    --board-frame: 220 25% 4%;
+    --board-light: 60 56% 91%;
+    --board-dark:  82 27% 47%;
+    --board-frame: 0 0% 4%;
     --square-selected: 48 90% 62%;
     --square-move: 142 55% 52%;
     --square-capture: 0 75% 60%;
@@ -90,6 +90,23 @@
 
     --shadow-elegant: 0 30px 60px -25px hsl(0 0% 0% / 0.6), 0 10px 20px -10px hsl(0 0% 0% / 0.4);
     --shadow-soft: 0 4px 20px -8px hsl(0 0% 0% / 0.4);
+  }
+
+  /* Board theme overrides — applied via class on a wrapping element */
+  .board-theme-classic {
+    --board-light: 60 56% 91%;   /* #eeeed2 */
+    --board-dark:  82 27% 47%;   /* #769656 */
+    --board-frame: 80 20% 14%;
+  }
+  .board-theme-walnut {
+    --board-light: 36 45% 82%;   /* warm cream */
+    --board-dark:  25 38% 36%;   /* deep walnut */
+    --board-frame: 22 35% 12%;
+  }
+  .board-theme-ice {
+    --board-light: 210 30% 92%;  /* frost */
+    --board-dark:  212 22% 48%;  /* slate blue-grey */
+    --board-frame: 215 25% 12%;
   }
 }
 

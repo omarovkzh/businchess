@@ -261,7 +261,7 @@ export function AICoachPanel({ open, loading, error, analysis, pgn, onClose, onR
           {/* CENTER: replay board + controls */}
           <section className="flex flex-col gap-3 min-h-0 order-1 lg:order-2 items-center">
             <div
-              className="w-full mx-auto"
+              className={`w-full mx-auto board-theme-${typeof window !== "undefined" ? (localStorage.getItem("boardTheme") || "classic") : "classic"}`}
               style={{ maxWidth: "min(100%, calc(100vh - 240px))" }}
             >
               <ReplayBoard fen={fen} lastMove={lastMove} />

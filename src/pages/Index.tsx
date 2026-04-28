@@ -60,6 +60,17 @@ const Index = () => {
   const [blackMs, setBlackMs] = useState(initialTimeMs);
   const [timeoutSide, setTimeoutSide] = useState<Side | null>(null);
 
+  // Board theme
+  const BOARD_THEMES = [
+    { id: "classic", label: "Classic", swatch: ["#eeeed2", "#769656"] },
+    { id: "walnut",  label: "Walnut",  swatch: ["#e9d3b1", "#7a4f2d"] },
+    { id: "ice",     label: "Ice",     swatch: ["#e3eaf2", "#5d7894"] },
+  ] as const;
+  const [boardTheme, setBoardTheme] = useState<typeof BOARD_THEMES[number]["id"]>(
+    () => (localStorage.getItem("boardTheme") as any) || "classic",
+  );
+  useEffect(() => { localStorage.setItem("boardTheme", boardTheme); }, [boardTheme]);
+
   // Sounds
   const sounds = useSounds();
   const [soundOn, setSoundOn] = useState(true);
@@ -356,15 +367,16 @@ const Index = () => {
               />
             </div>
 
-            <Board
-              game={game}
-              orientation={orientation}
-              onMove={handlePlayerMove}
-              lastMove={lastMove}
-              disabled={!isPlayerTurn}
-              onPromotionNeeded={(from, to) => setPendingPromotion({ from, to })}
-            />
-
+            <div className={`w-full board-theme-${boardTheme}`}>
+              <Board
+                game={game}
+                orientation={orientation}
+                onMove={handlePlayerMove}
+                lastMove={lastMove}
+                disabled={!isPlayerTurn}
+                onPromotionNeeded={(from, to) => setPendingPromotion({ from, to })}
+              />
+            </div>
             {/* Bottom player + clock */}
             <div className="w-full flex items-stretch gap-2 sm:gap-3">
               <PlayerBar
@@ -493,6 +505,34 @@ const Index = () => {
                   >
                     ♚ Black
                   </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Board theme</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {BOARD_THEMES.map((t) => {
+                    const active = boardTheme === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setBoardTheme(t.id)}
+                        className={`group relative rounded-lg border p-1.5 transition-all ${
+                          active ? "border-accent ring-2 ring-accent/30" : "border-border hover:border-accent/60"
+                        }`}
+                        aria-label={t.label}
+                      >
+                        <div className="flex h-8 w-full overflow-hidden rounded-md">
+                          <div className="h-full w-1/2" style={{ background: t.swatch[0] }} />
+                          <div className="h-full w-1/2" style={{ background: t.swatch[1] }} />
+                        </div>
+                        <p className="mt-1 text-[10px] tracking-wider uppercase text-center font-medium">
+                          {t.label}
+                        </p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

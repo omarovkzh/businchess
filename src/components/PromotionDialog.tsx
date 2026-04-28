@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { PIECE_GLYPHS } from "@/lib/pieces";
+import { PieceIcon } from "@/components/PieceIcon";
 import { cn } from "@/lib/utils";
 
 interface PromotionDialogProps {
@@ -25,14 +25,12 @@ export function PromotionDialog({ open, color, onSelect, onCancel }: PromotionDi
               onClick={() => onSelect(p)}
               className={cn(
                 "aspect-square rounded-xl border border-border bg-secondary/60",
-                "flex items-center justify-center text-5xl",
-                "hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all",
-                "hover:scale-105 piece-shadow",
-                color === "w" ? "text-foreground" : "text-foreground",
+                "flex items-center justify-center p-2",
+                "hover:bg-accent/10 hover:border-accent transition-all hover:scale-105 piece-shadow",
               )}
               aria-label={p}
             >
-              {PIECE_GLYPHS[`${color}${p.toUpperCase()}`]}
+              <PieceIcon color={color} type={p} className="w-full h-full" />
             </button>
           ))}
         </div>
