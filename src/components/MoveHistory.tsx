@@ -1,15 +1,15 @@
 import { useEffect, useRef } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MoveHistoryProps {
   history: string[]; // SAN moves
 }
 
 export function MoveHistory({ history }: MoveHistoryProps) {
-  const endRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [history.length]);
 
   const pairs: { num: number; white: string; black?: string }[] = [];
@@ -19,14 +19,17 @@ export function MoveHistory({ history }: MoveHistoryProps) {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="flex items-baseline justify-between mb-3">
+      <div className="flex items-baseline justify-between mb-3 shrink-0">
         <h2 className="font-display text-lg font-semibold tracking-tight">Moves</h2>
         <span className="text-xs text-muted-foreground tabular-nums">
           {history.length} ply
         </span>
       </div>
 
-      <ScrollArea className="flex-1 -mr-2 pr-2">
+      <div
+        ref={scrollRef}
+        className="flex-1 min-h-0 overflow-y-auto -mr-2 pr-2"
+      >
         {pairs.length === 0 ? (
           <p className="text-sm text-muted-foreground italic py-6 text-center">
             The board awaits your opening.
@@ -45,8 +48,7 @@ export function MoveHistory({ history }: MoveHistoryProps) {
             ))}
           </ol>
         )}
-        <div ref={endRef} />
-      </ScrollArea>
+      </div>
     </div>
   );
 }
