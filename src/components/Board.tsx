@@ -106,9 +106,9 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
               <button
                 key={square}
                 onClick={() => handleClick(square)}
+                style={{ backgroundColor: isLight ? colors.light : colors.dark }}
                 className={cn(
                   "relative w-full h-full min-w-0 min-h-0 overflow-hidden transition-colors duration-150 select-none",
-                  isLight ? "bg-board-light" : "bg-board-dark",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset",
                 )}
                 aria-label={square}
