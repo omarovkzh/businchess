@@ -1,6 +1,6 @@
 import { Chess, Square, type Move } from "chess.js";
 import { useMemo, useState } from "react";
-import { PIECE_GLYPHS, pieceKey } from "@/lib/pieces";
+import { PieceIcon } from "@/components/PieceIcon";
 import { cn } from "@/lib/utils";
 
 interface BoardProps {
