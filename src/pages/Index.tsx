@@ -370,7 +370,7 @@ const Index = () => {
               />
             </div>
 
-            <div className={`w-full board-theme-${boardTheme}`}>
+            <div className="w-full">
               <Board
                 game={game}
                 orientation={orientation}
@@ -378,6 +378,7 @@ const Index = () => {
                 lastMove={lastMove}
                 disabled={!isPlayerTurn}
                 onPromotionNeeded={(from, to) => setPendingPromotion({ from, to })}
+                themeColors={themeColors}
               />
             </div>
             {/* Bottom player + clock */}
