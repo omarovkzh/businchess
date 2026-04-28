@@ -5,11 +5,15 @@ import { useEffect, useRef, useState } from "react";
 
 type BestMoveCallback = (move: { from: string; to: string; promotion?: string }) => void;
 
+const HARD_TIMEOUT_MS = 2000;
+
 const STOCKFISH_URL = "https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js";
 
 export function useStockfish() {
   const workerRef = useRef<Worker | null>(null);
   const callbackRef = useRef<BestMoveCallback | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestStartRef = useRef<number>(0);
   const [ready, setReady] = useState(false);
   const [usingFallback, setUsingFallback] = useState(false);
 
@@ -34,13 +38,20 @@ export function useStockfish() {
           } else if (line.startsWith("bestmove")) {
             const parts = line.split(" ");
             const mv = parts[1];
+            const elapsed = requestStartRef.current ? Date.now() - requestStartRef.current : 0;
+            console.log(`[Stockfish] bestmove received: ${mv} (${elapsed}ms)`);
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
             if (mv && mv !== "(none)" && callbackRef.current) {
-              callbackRef.current({
+              const cb = callbackRef.current;
+              callbackRef.current = null;
+              cb({
                 from: mv.slice(0, 2),
                 to: mv.slice(2, 4),
                 promotion: mv.length > 4 ? mv.slice(4, 5) : undefined,
               });
-              callbackRef.current = null;
             }
           }
         };
@@ -79,17 +90,39 @@ export function useStockfish() {
     movetime: number,
     cb: BestMoveCallback,
   ) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     callbackRef.current = cb;
 
     if (usingFallback || !workerRef.current) {
+      console.log("[Stockfish] using fallback (random move)");
       callbackRef.current = null;
       cb({ from: "", to: "" });
       return;
     }
 
+    const mt = Math.max(100, Math.min(5000, movetime));
     const w = workerRef.current;
+    requestStartRef.current = Date.now();
+    console.log(`[Stockfish] sending: go movetime ${mt}`);
+    w.postMessage("ucinewgame");
     w.postMessage(`position fen ${fen}`);
-    w.postMessage(`go movetime ${Math.max(100, Math.min(5000, movetime))}`);
+    w.postMessage(`go movetime ${mt}`);
+
+    // Hard timeout: if no response in 2s, force a random legal move via empty callback
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+      if (!callbackRef.current) return;
+      console.warn(`[Stockfish] HARD TIMEOUT after ${HARD_TIMEOUT_MS}ms — forcing fallback move`);
+      try {
+        w.postMessage("stop");
+      } catch { /* noop */ }
+      const cbNow = callbackRef.current;
+      callbackRef.current = null;
+      cbNow({ from: "", to: "" });
+    }, HARD_TIMEOUT_MS);
   };
 
   return { ready, usingFallback, requestMove };
