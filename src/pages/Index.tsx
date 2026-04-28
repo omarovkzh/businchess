@@ -367,15 +367,16 @@ const Index = () => {
               />
             </div>
 
-            <Board
-              game={game}
-              orientation={orientation}
-              onMove={handlePlayerMove}
-              lastMove={lastMove}
-              disabled={!isPlayerTurn}
-              onPromotionNeeded={(from, to) => setPendingPromotion({ from, to })}
-            />
-
+            <div className={`w-full board-theme-${boardTheme}`}>
+              <Board
+                game={game}
+                orientation={orientation}
+                onMove={handlePlayerMove}
+                lastMove={lastMove}
+                disabled={!isPlayerTurn}
+                onPromotionNeeded={(from, to) => setPendingPromotion({ from, to })}
+              />
+            </div>
             {/* Bottom player + clock */}
             <div className="w-full flex items-stretch gap-2 sm:gap-3">
               <PlayerBar
