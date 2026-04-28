@@ -216,13 +216,15 @@ const Index = () => {
     setPlayerSide(side);
     setOrientation(side);
     setDifficulty(pendingDifficulty);
+    setTimeIndex(pendingTimeIndex);
+    const ms = TIME_CONTROLS[pendingTimeIndex].minutes * 60 * 1000;
     setThinking(false);
     setPendingPromotion(null);
     setCoachOpen(false);
     setAnalysis(null);
     setCoachError(null);
-    setWhiteMs(INITIAL_TIME_MS);
-    setBlackMs(INITIAL_TIME_MS);
+    setWhiteMs(ms);
+    setBlackMs(ms);
     setTimeoutSide(null);
     setGameOverOpen(false);
     endHandledRef.current = false;
