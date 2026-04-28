@@ -91,6 +91,23 @@
     --shadow-elegant: 0 30px 60px -25px hsl(0 0% 0% / 0.6), 0 10px 20px -10px hsl(0 0% 0% / 0.4);
     --shadow-soft: 0 4px 20px -8px hsl(0 0% 0% / 0.4);
   }
+
+  /* Board theme overrides — applied via class on a wrapping element */
+  .board-theme-classic {
+    --board-light: 60 56% 91%;   /* #eeeed2 */
+    --board-dark:  82 27% 47%;   /* #769656 */
+    --board-frame: 80 20% 14%;
+  }
+  .board-theme-walnut {
+    --board-light: 36 45% 82%;   /* warm cream */
+    --board-dark:  25 38% 36%;   /* deep walnut */
+    --board-frame: 22 35% 12%;
+  }
+  .board-theme-ice {
+    --board-light: 210 30% 92%;  /* frost */
+    --board-dark:  212 22% 48%;  /* slate blue-grey */
+    --board-frame: 215 25% 12%;
+  }
 }
 
 @layer base {
