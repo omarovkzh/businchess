@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Chess, type Square } from "chess.js";
 import { ReplayBoard } from "./ReplayBoard";
 import { cn } from "@/lib/utils";
+import { type BoardThemeColors } from "@/lib/boardThemes";
 
 export type Moment = {
   moveNumber: number;
