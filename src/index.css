@@ -79,9 +79,9 @@
     --input: 220 15% 18%;
     --ring: 28 75% 58%;
 
-    --board-light: 35 18% 72%;
-    --board-dark: 25 22% 28%;
-    --board-frame: 220 25% 4%;
+    --board-light: 60 56% 91%;
+    --board-dark:  82 27% 47%;
+    --board-frame: 0 0% 4%;
     --square-selected: 48 90% 62%;
     --square-move: 142 55% 52%;
     --square-capture: 0 75% 60%;
