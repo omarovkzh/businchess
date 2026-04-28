@@ -121,12 +121,9 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
                   <span
                     className={cn(
                       "absolute inset-0 z-10 flex items-center justify-center piece-shadow leading-none pointer-events-none",
-                      "text-[clamp(1.6rem,7.5vw,3.6rem)]",
-                      piece.color === "w" ? "text-white" : "text-neutral-900",
                     )}
-                    style={{ textShadow: piece.color === "w" ? "0 0 1px rgba(0,0,0,0.6)" : "0 0 1px rgba(255,255,255,0.4)" }}
                   >
-                    {PIECE_GLYPHS[pieceKey(piece.color, piece.type)]}
+                    <PieceIcon color={piece.color} type={piece.type} className="w-[88%] h-[88%]" />
                   </span>
                 )}
 
