@@ -1,4 +1,4 @@
-# Gambit ♟️
+# Businchess ♟️
 
 **Chess. But with a coach that thinks like a founder.**
 
