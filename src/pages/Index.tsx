@@ -83,11 +83,11 @@ const Index = () => {
     if (!stockfish.ready) return;
 
     setThinking(true);
-    const cfg = SKILL_LEVELS[difficulty];
+    const cfg = DIFFICULTY_LEVELS[difficulty];
     const fen = game.fen();
 
     const handle = setTimeout(() => {
-      stockfish.requestMove(fen, cfg.skill, cfg.movetime, (mv) => {
+      stockfish.requestMove(fen, cfg.depth, (mv) => {
         if (!mv.from || !mv.to) {
           // Fallback: random legal
           const legal = gameRef.current.moves({ verbose: true });
