@@ -52,9 +52,12 @@ const Index = () => {
   const [coachError, setCoachError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
 
-  // Clock
-  const [whiteMs, setWhiteMs] = useState(INITIAL_TIME_MS);
-  const [blackMs, setBlackMs] = useState(INITIAL_TIME_MS);
+  // Clock + time control
+  const [timeIndex, setTimeIndex] = useState(DEFAULT_TIME_INDEX);
+  const [pendingTimeIndex, setPendingTimeIndex] = useState(DEFAULT_TIME_INDEX);
+  const initialTimeMs = TIME_CONTROLS[timeIndex].minutes * 60 * 1000;
+  const [whiteMs, setWhiteMs] = useState(initialTimeMs);
+  const [blackMs, setBlackMs] = useState(initialTimeMs);
   const [timeoutSide, setTimeoutSide] = useState<Side | null>(null);
 
   // Sounds
