@@ -28,7 +28,8 @@ const Index = () => {
 
   const [playerSide, setPlayerSide] = useState<Side>("w");
   const [orientation, setOrientation] = useState<Side>("w");
-  const [difficulty, setDifficulty] = useState(2); // index into SKILL_LEVELS
+  const [difficulty, setDifficulty] = useState(1); // index into DIFFICULTY_LEVELS (Medium default)
+  const [pendingDifficulty, setPendingDifficulty] = useState(1);
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
   const [thinking, setThinking] = useState(false);
   const [coachOpen, setCoachOpen] = useState(false);
