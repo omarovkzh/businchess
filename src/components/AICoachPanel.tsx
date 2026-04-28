@@ -47,6 +47,7 @@ interface AICoachPanelProps {
   pgn: string;
   onClose: () => void;
   onRetry: () => void;
+  themeColors?: BoardThemeColors;
 }
 
 type Step = {
