@@ -14,12 +14,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Side = "w" | "b";
 
-const SKILL_LEVELS = [
-  { label: "Beginner",   skill: 1,  movetime: 200 },
-  { label: "Casual",     skill: 5,  movetime: 350 },
-  { label: "Intermediate", skill: 10, movetime: 600 },
-  { label: "Advanced",   skill: 15, movetime: 900 },
-  { label: "Master",     skill: 20, movetime: 1400 },
+const DIFFICULTY_LEVELS = [
+  { label: "Easy",   depth: 1 },
+  { label: "Medium", depth: 5 },
+  { label: "Hard",   depth: 15 },
 ];
 
 const Index = () => {
@@ -30,7 +28,8 @@ const Index = () => {
 
   const [playerSide, setPlayerSide] = useState<Side>("w");
   const [orientation, setOrientation] = useState<Side>("w");
-  const [difficulty, setDifficulty] = useState(2); // index into SKILL_LEVELS
+  const [difficulty, setDifficulty] = useState(1); // index into DIFFICULTY_LEVELS (Medium default)
+  const [pendingDifficulty, setPendingDifficulty] = useState(1);
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
   const [thinking, setThinking] = useState(false);
   const [coachOpen, setCoachOpen] = useState(false);
@@ -84,11 +83,11 @@ const Index = () => {
     if (!stockfish.ready) return;
 
     setThinking(true);
-    const cfg = SKILL_LEVELS[difficulty];
+    const cfg = DIFFICULTY_LEVELS[difficulty];
     const fen = game.fen();
 
     const handle = setTimeout(() => {
-      stockfish.requestMove(fen, cfg.skill, cfg.movetime, (mv) => {
+      stockfish.requestMove(fen, cfg.depth, (mv) => {
         if (!mv.from || !mv.to) {
           // Fallback: random legal
           const legal = gameRef.current.moves({ verbose: true });
@@ -118,12 +117,15 @@ const Index = () => {
     setGame(new Chess());
     setPlayerSide(side);
     setOrientation(side);
+    setDifficulty(pendingDifficulty);
     setThinking(false);
     setPendingPromotion(null);
     setCoachOpen(false);
     setAnalysis(null);
     setCoachError(null);
   };
+
+  const gameInProgress = history.length > 0 && !game.isGameOver();
 
   const handleAnalyze = async () => {
     setCoachOpen(true);
@@ -200,12 +202,18 @@ const Index = () => {
         <div className="grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-10 items-start">
           {/* Board side */}
           <div className="flex flex-col items-center gap-5">
+            <div className="w-full max-w-[min(92vw,640px)] flex items-center justify-center gap-2">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
+              <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
+                {DIFFICULTY_LEVELS[difficulty].label}
+              </span>
+            </div>
             <PlayerBar
               label={playerSide === "w" ? "Stockfish" : "Stockfish"}
               side={playerSide === "w" ? "b" : "w"}
               active={game.turn() !== playerSide && !game.isGameOver()}
               thinking={thinking}
-              difficulty={SKILL_LEVELS[difficulty].label}
+              difficulty={DIFFICULTY_LEVELS[difficulty].label}
             />
 
             <Board
@@ -262,18 +270,27 @@ const Index = () => {
             <div className="rounded-2xl border border-border bg-card p-5 shadow-soft space-y-4">
               <div className="space-y-2">
                 <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Difficulty</label>
-                <Select value={String(difficulty)} onValueChange={(v) => setDifficulty(Number(v))}>
+                <Select
+                  value={String(pendingDifficulty)}
+                  onValueChange={(v) => setPendingDifficulty(Number(v))}
+                  disabled={gameInProgress}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {SKILL_LEVELS.map((l, i) => (
+                    {DIFFICULTY_LEVELS.map((l, i) => (
                       <SelectItem key={l.label} value={String(i)}>
-                        {l.label}
+                        {l.label} <span className="text-muted-foreground">· depth {l.depth}</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {gameInProgress
+                  ? <p className="text-[11px] text-muted-foreground">Applies on next new game.</p>
+                  : pendingDifficulty !== difficulty
+                    ? <p className="text-[11px] text-accent">Starts on next new game.</p>
+                    : null}
               </div>
 
               <div className="space-y-2">
