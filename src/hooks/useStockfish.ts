@@ -76,13 +76,12 @@ export function useStockfish() {
 
   const requestMove = (
     fen: string,
-    depth: number,
+    movetime: number,
     cb: BestMoveCallback,
   ) => {
     callbackRef.current = cb;
 
     if (usingFallback || !workerRef.current) {
-      // Fallback handled by caller (random legal move). Signal via cb=null marker.
       callbackRef.current = null;
       cb({ from: "", to: "" });
       return;
@@ -90,7 +89,7 @@ export function useStockfish() {
 
     const w = workerRef.current;
     w.postMessage(`position fen ${fen}`);
-    w.postMessage(`go depth ${Math.max(1, Math.min(20, depth))}`);
+    w.postMessage(`go movetime ${Math.max(100, Math.min(5000, movetime))}`);
   };
 
   return { ready, usingFallback, requestMove };
