@@ -23,7 +23,17 @@ const DIFFICULTY_LEVELS = [
   { label: "Hard",   movetime: 1200 },
 ];
 
-const INITIAL_TIME_MS = 5 * 60 * 1000;
+type TimeCategory = "Bullet" | "Blitz" | "Rapid" | "Classical";
+const TIME_CONTROLS: { minutes: number; category: TimeCategory }[] = [
+  { minutes: 1,  category: "Bullet" },
+  { minutes: 2,  category: "Bullet" },
+  { minutes: 3,  category: "Blitz" },
+  { minutes: 5,  category: "Blitz" },
+  { minutes: 10, category: "Rapid" },
+  { minutes: 15, category: "Rapid" },
+  { minutes: 30, category: "Classical" },
+];
+const DEFAULT_TIME_INDEX = 3; // 5 min Blitz
 
 const Index = () => {
   const { theme, toggle } = useTheme();
