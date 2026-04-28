@@ -60,6 +60,17 @@ const Index = () => {
   const [blackMs, setBlackMs] = useState(initialTimeMs);
   const [timeoutSide, setTimeoutSide] = useState<Side | null>(null);
 
+  // Board theme
+  const BOARD_THEMES = [
+    { id: "classic", label: "Classic", swatch: ["#eeeed2", "#769656"] },
+    { id: "walnut",  label: "Walnut",  swatch: ["#e9d3b1", "#7a4f2d"] },
+    { id: "ice",     label: "Ice",     swatch: ["#e3eaf2", "#5d7894"] },
+  ] as const;
+  const [boardTheme, setBoardTheme] = useState<typeof BOARD_THEMES[number]["id"]>(
+    () => (localStorage.getItem("boardTheme") as any) || "classic",
+  );
+  useEffect(() => { localStorage.setItem("boardTheme", boardTheme); }, [boardTheme]);
+
   // Sounds
   const sounds = useSounds();
   const [soundOn, setSoundOn] = useState(true);
