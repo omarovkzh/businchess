@@ -14,6 +14,7 @@ import { Moon, Sun, RotateCcw, Undo2, FlipVertical2, Sparkles, Volume2, VolumeX 
 import { toast } from "sonner";
 import { AICoachPanel, type Analysis } from "@/components/AICoachPanel";
 import { supabase } from "@/integrations/supabase/client";
+import { BOARD_THEME_COLORS, type BoardThemeId } from "@/lib/boardThemes";
 
 type Side = "w" | "b";
 
