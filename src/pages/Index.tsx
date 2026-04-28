@@ -444,6 +444,31 @@ const Index = () => {
               </div>
 
               <div className="space-y-2">
+                <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Time control</label>
+                <Select
+                  value={String(pendingTimeIndex)}
+                  onValueChange={(v) => setPendingTimeIndex(Number(v))}
+                  disabled={gameInProgress}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIME_CONTROLS.map((t, i) => (
+                      <SelectItem key={i} value={String(i)}>
+                        {t.minutes} min <span className="text-muted-foreground">· {t.category}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {gameInProgress
+                  ? <p className="text-[11px] text-muted-foreground">Applies on next new game.</p>
+                  : pendingTimeIndex !== timeIndex
+                    ? <p className="text-[11px] text-accent">Starts on next new game.</p>
+                    : null}
+              </div>
+
+              <div className="space-y-2">
                 <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Play as</label>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
