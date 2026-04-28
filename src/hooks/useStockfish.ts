@@ -38,13 +38,20 @@ export function useStockfish() {
           } else if (line.startsWith("bestmove")) {
             const parts = line.split(" ");
             const mv = parts[1];
+            const elapsed = requestStartRef.current ? Date.now() - requestStartRef.current : 0;
+            console.log(`[Stockfish] bestmove received: ${mv} (${elapsed}ms)`);
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
             if (mv && mv !== "(none)" && callbackRef.current) {
-              callbackRef.current({
+              const cb = callbackRef.current;
+              callbackRef.current = null;
+              cb({
                 from: mv.slice(0, 2),
                 to: mv.slice(2, 4),
                 promotion: mv.length > 4 ? mv.slice(4, 5) : undefined,
               });
-              callbackRef.current = null;
             }
           }
         };
