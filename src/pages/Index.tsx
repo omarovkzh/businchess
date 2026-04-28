@@ -117,12 +117,15 @@ const Index = () => {
     setGame(new Chess());
     setPlayerSide(side);
     setOrientation(side);
+    setDifficulty(pendingDifficulty);
     setThinking(false);
     setPendingPromotion(null);
     setCoachOpen(false);
     setAnalysis(null);
     setCoachError(null);
   };
+
+  const gameInProgress = history.length > 0 && !game.isGameOver();
 
   const handleAnalyze = async () => {
     setCoachOpen(true);
