@@ -65,15 +65,8 @@ export function ReplayBoard({ fen, orientation = "w", lastMove, highlight }: Rep
                   <div className="absolute inset-0 ring-2 ring-inset ring-accent/80" />
                 )}
                 {piece && (
-                  <span
-                    className={cn(
-                      "absolute inset-0 z-10 flex items-center justify-center piece-shadow leading-none pointer-events-none",
-                      "text-[clamp(1.4rem,5.5vw,3rem)]",
-                      piece.color === "w" ? "text-white" : "text-neutral-900",
-                    )}
-                    style={{ textShadow: piece.color === "w" ? "0 0 1px rgba(0,0,0,0.6)" : "0 0 1px rgba(255,255,255,0.4)" }}
-                  >
-                    {PIECE_GLYPHS[pieceKey(piece.color, piece.type)]}
+                  <span className="absolute inset-0 z-10 flex items-center justify-center piece-shadow leading-none pointer-events-none">
+                    <PieceIcon color={piece.color} type={piece.type} className="w-[88%] h-[88%]" />
                   </span>
                 )}
               </div>
