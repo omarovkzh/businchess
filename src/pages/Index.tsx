@@ -270,18 +270,27 @@ const Index = () => {
             <div className="rounded-2xl border border-border bg-card p-5 shadow-soft space-y-4">
               <div className="space-y-2">
                 <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Difficulty</label>
-                <Select value={String(difficulty)} onValueChange={(v) => setDifficulty(Number(v))}>
+                <Select
+                  value={String(pendingDifficulty)}
+                  onValueChange={(v) => setPendingDifficulty(Number(v))}
+                  disabled={gameInProgress}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {SKILL_LEVELS.map((l, i) => (
+                    {DIFFICULTY_LEVELS.map((l, i) => (
                       <SelectItem key={l.label} value={String(i)}>
-                        {l.label}
+                        {l.label} <span className="text-muted-foreground">· depth {l.depth}</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {gameInProgress
+                  ? <p className="text-[11px] text-muted-foreground">Applies on next new game.</p>
+                  : pendingDifficulty !== difficulty
+                    ? <p className="text-[11px] text-accent">Starts on next new game.</p>
+                    : null}
               </div>
 
               <div className="space-y-2">
