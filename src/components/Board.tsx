@@ -2,6 +2,7 @@ import { Chess, Square, type Move } from "chess.js";
 import { useMemo, useState } from "react";
 import { PieceIcon } from "@/components/PieceIcon";
 import { cn } from "@/lib/utils";
+import { type BoardThemeColors, BOARD_THEME_COLORS } from "@/lib/boardThemes";
 
 interface BoardProps {
   game: Chess;
@@ -10,12 +11,14 @@ interface BoardProps {
   lastMove?: { from: Square; to: Square } | null;
   disabled?: boolean;
   onPromotionNeeded: (from: Square, to: Square) => void;
+  themeColors?: BoardThemeColors;
 }
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
 const RANKS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
 
-export function Board({ game, orientation, onMove, lastMove, disabled, onPromotionNeeded }: BoardProps) {
+export function Board({ game, orientation, onMove, lastMove, disabled, onPromotionNeeded, themeColors }: BoardProps) {
+  const colors = themeColors ?? BOARD_THEME_COLORS.classic;
   const [selected, setSelected] = useState<Square | null>(null);
 
   const files = orientation === "w" ? FILES : [...FILES].reverse();
@@ -67,18 +70,21 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
   };
 
   return (
-    <div className="relative w-full aspect-square rounded-2xl bg-[hsl(var(--board-frame))] p-3 sm:p-4 shadow-elegant animate-scale-in">
+    <div
+      className="relative w-full aspect-square rounded-2xl p-3 sm:p-4 shadow-elegant animate-scale-in"
+      style={{ backgroundColor: colors.frame }}
+    >
       {/* File labels top */}
-      <div className="absolute inset-x-3 sm:inset-x-4 top-0.5 flex justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70 tracking-wider uppercase">
+      <div className="absolute inset-x-3 sm:inset-x-4 top-0.5 flex justify-around text-[10px] sm:text-xs font-medium tracking-wider uppercase" style={{ color: colors.coordinate }}>
         {files.map((f) => <span key={`t-${f}`}>{f}</span>)}
       </div>
-      <div className="absolute inset-x-3 sm:inset-x-4 bottom-0.5 flex justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70 tracking-wider uppercase">
+      <div className="absolute inset-x-3 sm:inset-x-4 bottom-0.5 flex justify-around text-[10px] sm:text-xs font-medium tracking-wider uppercase" style={{ color: colors.coordinate }}>
         {files.map((f) => <span key={`b-${f}`}>{f}</span>)}
       </div>
-      <div className="absolute inset-y-3 sm:inset-y-4 left-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70">
+      <div className="absolute inset-y-3 sm:inset-y-4 left-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium" style={{ color: colors.coordinate }}>
         {ranks.map((r) => <span key={`l-${r}`}>{r}</span>)}
       </div>
-      <div className="absolute inset-y-3 sm:inset-y-4 right-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70">
+      <div className="absolute inset-y-3 sm:inset-y-4 right-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium" style={{ color: colors.coordinate }}>
         {ranks.map((r) => <span key={`r-${r}`}>{r}</span>)}
       </div>
 
@@ -100,9 +106,9 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
               <button
                 key={square}
                 onClick={() => handleClick(square)}
+                style={{ backgroundColor: isLight ? colors.light : colors.dark }}
                 className={cn(
                   "relative w-full h-full min-w-0 min-h-0 overflow-hidden transition-colors duration-150 select-none",
-                  isLight ? "bg-board-light" : "bg-board-dark",
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset",
                 )}
                 aria-label={square}
