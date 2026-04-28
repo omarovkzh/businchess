@@ -4,9 +4,9 @@
 
 ## What is this?
 
-I play chess. Have for years. And the one thing that always bothered me about every chess platform out there — they show you that you made a mistake, but they don't really explain *why it mattered*. You get a score. You get an arrow. You move on and make the same mistake next game.
+I play chess. Have for years. And the one thing that always bothered me about every chess platform out there, they show you that you made a mistake, but they don't really explain *why it mattered*. You get a score. You get an arrow. You move on and make the same mistake next game.
 
-Gambit is different. After every game, an AI Coach breaks down your key moments — not in chess notation, but in plain strategy language. The kind of thinking that applies beyond the board.
+Businchess is different. After every game, an AI Coach breaks down your key moments, not in chess notation, but in plain strategy language. The kind of thinking that applies beyond the board.
 
 ## Features
 
@@ -21,7 +21,7 @@ Gambit is different. After every game, an AI Coach breaks down your key moments 
 
 Chess is strategy compressed into 64 squares. Every blunder has a reason — overextension, ignoring defense, chasing short-term gain over long-term position. These patterns show up everywhere.
 
-So instead of just saying "this was a mistake", Gambit's AI Coach tells you *what kind* of mistake it was. That's the part I'm most proud of.
+So instead of just saying "this was a mistake", Businchess' AI Coach tells you *what kind* of mistake it was. That's the part I'm most proud of.
 
 ## Stack
 
