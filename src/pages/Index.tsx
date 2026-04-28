@@ -508,6 +508,34 @@ const Index = () => {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Board theme</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {BOARD_THEMES.map((t) => {
+                    const active = boardTheme === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setBoardTheme(t.id)}
+                        className={`group relative rounded-lg border p-1.5 transition-all ${
+                          active ? "border-accent ring-2 ring-accent/30" : "border-border hover:border-accent/60"
+                        }`}
+                        aria-label={t.label}
+                      >
+                        <div className="flex h-8 w-full overflow-hidden rounded-md">
+                          <div className="h-full w-1/2" style={{ background: t.swatch[0] }} />
+                          <div className="h-full w-1/2" style={{ background: t.swatch[1] }} />
+                        </div>
+                        <p className="mt-1 text-[10px] tracking-wider uppercase text-center font-medium">
+                          {t.label}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <Button variant="outline" onClick={handleUndo} disabled={history.length === 0 || thinking}>
                   <Undo2 className="h-4 w-4 mr-1.5" /> Undo
