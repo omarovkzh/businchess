@@ -21,7 +21,7 @@ type Side = "w" | "b";
 const DIFFICULTY_LEVELS = [
   { label: "Easy",   movetime: 500 },
   { label: "Medium", movetime: 800 },
-  { label: "Hard",   movetime: 1200 },
+  { label: "Hard",   movetime: 1000 },
 ];
 
 type TimeCategory = "Bullet" | "Blitz" | "Rapid" | "Classical";
@@ -170,23 +170,19 @@ const Index = () => {
     const cfg = DIFFICULTY_LEVELS[difficulty];
     const fen = game.fen();
 
-    const handle = setTimeout(() => {
-      stockfish.requestMove(fen, cfg.movetime, (mv) => {
-        if (!mv.from || !mv.to) {
-          const legal = gameRef.current.moves({ verbose: true });
-          if (legal.length) {
-            const pick = legal[Math.floor(Math.random() * legal.length)];
-            applyMove({ from: pick.from as Square, to: pick.to as Square, promotion: pick.promotion as any });
-          }
-        } else {
-          applyMove({ from: mv.from as Square, to: mv.to as Square, promotion: mv.promotion as any });
+    stockfish.requestMove(fen, cfg.movetime, (mv) => {
+      if (!mv.from || !mv.to) {
+        const legal = gameRef.current.moves({ verbose: true });
+        if (legal.length) {
+          const pick = legal[Math.floor(Math.random() * legal.length)];
+          applyMove({ from: pick.from as Square, to: pick.to as Square, promotion: pick.promotion as any });
         }
-        setThinking(false);
-        refresh();
-      });
-    }, 250);
-
-    return () => clearTimeout(handle);
+      } else {
+        applyMove({ from: mv.from as Square, to: mv.to as Square, promotion: mv.promotion as any });
+      }
+      setThinking(false);
+      refresh();
+    });
   }, [game, playerSide, stockfish.ready, difficulty, applyMove, stockfish, isOver]);
 
   // Handle game end → modal + end sound
