@@ -61,15 +61,17 @@ const Index = () => {
   const [blackMs, setBlackMs] = useState(initialTimeMs);
   const [timeoutSide, setTimeoutSide] = useState<Side | null>(null);
 
-  // Board theme
+  // Board theme — stored in React state, applied as direct color values (no class toggling).
   const BOARD_THEMES = [
-    { id: "classic", label: "Classic", swatch: ["#eeeed2", "#769656"] },
-    { id: "walnut",  label: "Walnut",  swatch: ["#e9d3b1", "#7a4f2d"] },
-    { id: "ice",     label: "Ice",     swatch: ["#e3eaf2", "#5d7894"] },
-  ] as const;
-  const [boardTheme, setBoardTheme] = useState<typeof BOARD_THEMES[number]["id"]>(
-    () => (localStorage.getItem("boardTheme") as any) || "classic",
-  );
+    { id: "classic" as BoardThemeId, label: "Classic", swatch: [BOARD_THEME_COLORS.classic.light, BOARD_THEME_COLORS.classic.dark] },
+    { id: "walnut"  as BoardThemeId, label: "Walnut",  swatch: [BOARD_THEME_COLORS.walnut.light,  BOARD_THEME_COLORS.walnut.dark] },
+    { id: "ice"     as BoardThemeId, label: "Ice",     swatch: [BOARD_THEME_COLORS.ice.light,     BOARD_THEME_COLORS.ice.dark] },
+  ];
+  const [boardTheme, setBoardTheme] = useState<BoardThemeId>(() => {
+    const stored = localStorage.getItem("boardTheme") as BoardThemeId | null;
+    return stored && BOARD_THEME_COLORS[stored] ? stored : "classic";
+  });
+  const themeColors = BOARD_THEME_COLORS[boardTheme];
   useEffect(() => { localStorage.setItem("boardTheme", boardTheme); }, [boardTheme]);
 
   // Sounds
