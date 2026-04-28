@@ -76,8 +76,7 @@ export function useStockfish() {
 
   const requestMove = (
     fen: string,
-    skill: number,
-    movetimeMs: number,
+    depth: number,
     cb: BestMoveCallback,
   ) => {
     callbackRef.current = cb;
@@ -90,9 +89,8 @@ export function useStockfish() {
     }
 
     const w = workerRef.current;
-    w.postMessage(`setoption name Skill Level value ${Math.max(0, Math.min(20, skill))}`);
     w.postMessage(`position fen ${fen}`);
-    w.postMessage(`go movetime ${movetimeMs}`);
+    w.postMessage(`go depth ${Math.max(1, Math.min(20, depth))}`);
   };
 
   return { ready, usingFallback, requestMove };
