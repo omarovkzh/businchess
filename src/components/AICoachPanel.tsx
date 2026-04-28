@@ -112,7 +112,7 @@ function normalizeMoments(a: Analysis | null, steps: Step[]): Moment[] {
   });
 }
 
-export function AICoachPanel({ open, loading, error, analysis, pgn, onClose, onRetry }: AICoachPanelProps) {
+export function AICoachPanel({ open, loading, error, analysis, pgn, onClose, onRetry, themeColors }: AICoachPanelProps) {
   const { steps, startFen } = useMemo(() => buildSteps(pgn), [pgn]);
   const moments = useMemo(() => normalizeMoments(analysis, steps), [analysis, steps]);
 
