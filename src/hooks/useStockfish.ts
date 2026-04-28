@@ -12,6 +12,8 @@ const STOCKFISH_URL = "https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfis
 export function useStockfish() {
   const workerRef = useRef<Worker | null>(null);
   const callbackRef = useRef<BestMoveCallback | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestStartRef = useRef<number>(0);
   const [ready, setReady] = useState(false);
   const [usingFallback, setUsingFallback] = useState(false);
 
