@@ -37,3 +37,4 @@ This project was built as part of the nFactorial Incubator 2026 selection. The t
 ---
 
 *Built in under 48 hours. Solo.*
+*Consider that I wasn’t familiar with coding as much as when I created this project, thank you*
