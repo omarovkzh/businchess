@@ -2,6 +2,7 @@ import { Chess, Square, type Move } from "chess.js";
 import { useMemo, useState } from "react";
 import { PieceIcon } from "@/components/PieceIcon";
 import { cn } from "@/lib/utils";
+import { type BoardThemeColors, BOARD_THEME_COLORS } from "@/lib/boardThemes";
 
 interface BoardProps {
   game: Chess;
@@ -10,6 +11,7 @@ interface BoardProps {
   lastMove?: { from: Square; to: Square } | null;
   disabled?: boolean;
   onPromotionNeeded: (from: Square, to: Square) => void;
+  themeColors?: BoardThemeColors;
 }
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
