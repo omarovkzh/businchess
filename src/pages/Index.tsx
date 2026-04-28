@@ -294,12 +294,19 @@ const Index = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-3 sm:px-6 py-4 sm:py-10">
-        <div className="grid lg:grid-cols-[1fr_340px] gap-5 lg:gap-10 items-start">
-          {/* Board side */}
-          <div className="flex flex-col items-center gap-3 sm:gap-5">
+      <main className="container mx-auto px-3 sm:px-6 py-4 sm:py-6">
+        {/* Layout: board (left) + history (right, same height) on lg, stacked on mobile */}
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 lg:items-start lg:justify-center">
+          {/* Board column — width derived from available height so the board always fits */}
+          <div
+            className="flex flex-col items-center gap-2 sm:gap-3 mx-auto w-full"
+            style={{
+              // On lg, cap board column width by viewport height (minus header + chrome) so board stays visible
+              maxWidth: "min(96vw, calc(100vh - 220px), 720px)",
+            }}
+          >
             {/* Difficulty label */}
-            <div className="w-full max-w-[min(96vw,640px)] flex items-center justify-center gap-2">
+            <div className="w-full flex items-center justify-center gap-2">
               <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Difficulty</span>
               <span className="text-[11px] tracking-widest uppercase font-medium text-accent px-2 py-0.5 rounded-md bg-accent/10 border border-accent/20">
                 {DIFFICULTY_LEVELS[difficulty].label}
@@ -307,7 +314,7 @@ const Index = () => {
             </div>
 
             {/* Top player + clock */}
-            <div className="w-full max-w-[min(96vw,640px)] flex items-stretch gap-2 sm:gap-3">
+            <div className="w-full flex items-stretch gap-2 sm:gap-3">
               <PlayerBar
                 label="Stockfish"
                 side={playerSide === "w" ? "b" : "w"}
@@ -331,7 +338,7 @@ const Index = () => {
             />
 
             {/* Bottom player + clock */}
-            <div className="w-full max-w-[min(96vw,640px)] flex items-stretch gap-2 sm:gap-3">
+            <div className="w-full flex items-stretch gap-2 sm:gap-3">
               <PlayerBar
                 label="You"
                 side={playerSide}
@@ -345,10 +352,16 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Side panel */}
-          <aside className="lg:sticky lg:top-6 flex flex-col gap-4">
+          {/* Right panel — Chess.com style: moves directly to the right of the board, same height */}
+          <aside
+            className="w-full lg:w-[340px] lg:shrink-0 flex flex-col gap-4 lg:self-stretch"
+            style={{
+              // Match height to the board column on large screens
+              ['--panel-h' as any]: "min(calc(100vh - 140px), 820px)",
+            }}
+          >
             {/* Status card */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-soft animate-fade-in">
+            <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-soft animate-fade-in shrink-0">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] tracking-widest uppercase text-muted-foreground">Status</span>
                 {thinking && (
@@ -378,8 +391,13 @@ const Index = () => {
               )}
             </div>
 
+            {/* History — flexes to fill remaining height, scrolls internally */}
+            <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-soft flex flex-col flex-1 min-h-[220px] lg:min-h-0 lg:max-h-[calc(100vh-140px)] overflow-hidden">
+              <MoveHistory history={history} />
+            </div>
+
             {/* Controls */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-soft space-y-4">
+            <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-soft space-y-4 shrink-0">
               <div className="space-y-2">
                 <label className="text-[11px] tracking-widest uppercase text-muted-foreground">Difficulty</label>
                 <Select
@@ -433,11 +451,6 @@ const Index = () => {
                   <RotateCcw className="h-4 w-4 mr-1.5" /> New
                 </Button>
               </div>
-            </div>
-
-            {/* History */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-soft flex-1 min-h-[220px] max-h-[420px] flex flex-col">
-              <MoveHistory history={history} />
             </div>
           </aside>
         </div>
