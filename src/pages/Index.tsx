@@ -573,6 +573,7 @@ const Index = () => {
         pgn={game.pgn()}
         onClose={() => setCoachOpen(false)}
         onRetry={handleAnalyze}
+        themeColors={themeColors}
       />
 
       <GameOverDialog
