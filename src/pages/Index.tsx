@@ -81,8 +81,13 @@ const Index = () => {
   }, [game, history.length, timeoutSide]);
 
   const isPlayerTurn = game.turn() === playerSide && !isOver;
-  // Clock runs for the side to move whenever the game is in progress.
-  const runningSide: Side | null = isOver ? null : game.turn();
+  // Standard tournament rule: each side's clock starts only after their first move.
+  // White's clock runs only after White has played at least once (history.length >= 1).
+  // Black's clock runs only after Black has played at least once (history.length >= 2).
+  const sideToMove: Side = game.turn();
+  const sideHasMoved =
+    sideToMove === "w" ? history.length >= 1 : history.length >= 2;
+  const runningSide: Side | null = isOver || !sideHasMoved ? null : sideToMove;
 
   // Tick the clock
   useEffect(() => {
