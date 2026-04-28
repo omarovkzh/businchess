@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useTheme } from "@/hooks/useTheme";
 import { useStockfish } from "@/hooks/useStockfish";
 import { useSounds } from "@/hooks/useSounds";
-import { GameClock } from "@/components/GameClock";
+
 import { GameOverDialog, type GameResult, type EndReason } from "@/components/GameOverDialog";
 import { Moon, Sun, RotateCcw, Undo2, FlipVertical2, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
@@ -81,11 +81,7 @@ const Index = () => {
   }, [game, history.length, timeoutSide]);
 
   const isPlayerTurn = game.turn() === playerSide && !isOver;
-  const activeClockSide: Side | null = isOver || history.length === 0 && game.turn() === "w" && playerSide === "b"
-    ? null
-    : (history.length === 0 && playerSide === "b" ? null : game.turn());
-  // Simpler rule: clock runs once a side has had at least 1 ply OR it's their turn after game starts.
-  // We'll just run the clock for the side-to-move whenever the game is in progress.
+  // Clock runs for the side to move whenever the game is in progress.
   const runningSide: Side | null = isOver ? null : game.turn();
 
   // Tick the clock
