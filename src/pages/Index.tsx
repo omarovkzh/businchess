@@ -18,9 +18,9 @@ import { supabase } from "@/integrations/supabase/client";
 type Side = "w" | "b";
 
 const DIFFICULTY_LEVELS = [
-  { label: "Easy",   depth: 1 },
-  { label: "Medium", depth: 5 },
-  { label: "Hard",   depth: 15 },
+  { label: "Easy",   movetime: 500 },
+  { label: "Medium", movetime: 800 },
+  { label: "Hard",   movetime: 1200 },
 ];
 
 const INITIAL_TIME_MS = 5 * 60 * 1000;
