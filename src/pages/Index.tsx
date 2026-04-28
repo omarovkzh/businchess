@@ -14,12 +14,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Side = "w" | "b";
 
-const SKILL_LEVELS = [
-  { label: "Beginner",   skill: 1,  movetime: 200 },
-  { label: "Casual",     skill: 5,  movetime: 350 },
-  { label: "Intermediate", skill: 10, movetime: 600 },
-  { label: "Advanced",   skill: 15, movetime: 900 },
-  { label: "Master",     skill: 20, movetime: 1400 },
+const DIFFICULTY_LEVELS = [
+  { label: "Easy",   depth: 1 },
+  { label: "Medium", depth: 5 },
+  { label: "Hard",   depth: 15 },
 ];
 
 const Index = () => {
