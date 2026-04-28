@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 type BestMoveCallback = (move: { from: string; to: string; promotion?: string }) => void;
 
+const HARD_TIMEOUT_MS = 2000;
+
 const STOCKFISH_URL = "https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js";
 
 export function useStockfish() {
