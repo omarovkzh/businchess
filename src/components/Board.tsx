@@ -70,18 +70,21 @@ export function Board({ game, orientation, onMove, lastMove, disabled, onPromoti
   };
 
   return (
-    <div className="relative w-full aspect-square rounded-2xl bg-[hsl(var(--board-frame))] p-3 sm:p-4 shadow-elegant animate-scale-in">
+    <div
+      className="relative w-full aspect-square rounded-2xl p-3 sm:p-4 shadow-elegant animate-scale-in"
+      style={{ backgroundColor: colors.frame }}
+    >
       {/* File labels top */}
-      <div className="absolute inset-x-3 sm:inset-x-4 top-0.5 flex justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70 tracking-wider uppercase">
+      <div className="absolute inset-x-3 sm:inset-x-4 top-0.5 flex justify-around text-[10px] sm:text-xs font-medium tracking-wider uppercase" style={{ color: colors.coordinate }}>
         {files.map((f) => <span key={`t-${f}`}>{f}</span>)}
       </div>
-      <div className="absolute inset-x-3 sm:inset-x-4 bottom-0.5 flex justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70 tracking-wider uppercase">
+      <div className="absolute inset-x-3 sm:inset-x-4 bottom-0.5 flex justify-around text-[10px] sm:text-xs font-medium tracking-wider uppercase" style={{ color: colors.coordinate }}>
         {files.map((f) => <span key={`b-${f}`}>{f}</span>)}
       </div>
-      <div className="absolute inset-y-3 sm:inset-y-4 left-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70">
+      <div className="absolute inset-y-3 sm:inset-y-4 left-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium" style={{ color: colors.coordinate }}>
         {ranks.map((r) => <span key={`l-${r}`}>{r}</span>)}
       </div>
-      <div className="absolute inset-y-3 sm:inset-y-4 right-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium text-[hsl(var(--board-light))]/70">
+      <div className="absolute inset-y-3 sm:inset-y-4 right-0.5 flex flex-col justify-around text-[10px] sm:text-xs font-medium" style={{ color: colors.coordinate }}>
         {ranks.map((r) => <span key={`r-${r}`}>{r}</span>)}
       </div>
 
